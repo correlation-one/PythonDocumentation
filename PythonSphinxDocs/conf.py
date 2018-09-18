@@ -17,6 +17,12 @@ import sys
 sys.path.insert(0, os.path.abspath('.'))
 sys.path.insert(0, os.path.abspath('./gamelib'))
 sys.path.insert(0, os.path.abspath('..'))
+sys.path.insert(0, os.path.abspath('../..'))
+sys.path.insert(0, os.path.abspath('../../..'))
+sys.path.insert(0, os.path.abspath('../../../..'))
+sys.path.insert(0, os.path.abspath('./PythonSphinxDocs/gamelib'))
+sys.path.insert(0, os.path.abspath('../PythonSphinxDocs/gamelib'))
+sys.path.insert(0, os.path.abspath('./PythonDocumentation/PythonSphinxDocs/gamelib'))
 
 
 # -- Project information -----------------------------------------------------
