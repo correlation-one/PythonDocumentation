@@ -13,6 +13,7 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
    
@@ -40,10 +41,7 @@
     <span class="sd">&quot;&quot;&quot;Holds data about the current game map and provides functions</span>
 <span class="sd">    useful for getting information related to the map.</span>
 
-<span class="sd">    Note that the game board is stored as a 2 dimensional array representing each tile on</span>
-<span class="sd">    the board. Each tile is yet another array containing the units located at</span>
-<span class="sd">    the x,y coordinates specified in the first two indices. So getting the 2nd</span>
-<span class="sd">    of 3 units located at (12, 13) would look like: `unit = instance_of_game_map[12,13][1]`</span>
+<span class="sd">    game_map[x, y] will return a list of Units located at that location, or None if there are no units</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        * config (JSON): Contains information about the game</span>
@@ -76,13 +74,13 @@
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">location</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_arena_bounds</span><span class="p">(</span><span class="n">location</span><span class="p">):</span>
             <span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">location</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__map</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span>
-        <span class="k">raise</span> <span class="n">InvalidCoordinate</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_invalid_coordinates</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">location</span><span class="p">)</span> <span class="o">==</span> <span class="nb">tuple</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">location</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_arena_bounds</span><span class="p">(</span><span class="n">location</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__map</span><span class="p">[</span><span class="n">location</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">location</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">val</span>
             <span class="k">return</span>
-        <span class="k">raise</span> <span class="n">InvalidCoordinate</span><span class="p">(</span><span class="n">location</span><span class="p">)</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">_invalid_coordinates</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__start</span> <span class="o">=</span> <span class="p">[</span><span class="mi">13</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
@@ -108,6 +106,9 @@
             <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ARENA_SIZE</span><span class="p">):</span>
                 <span class="n">grid</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">([])</span>
         <span class="k">return</span> <span class="n">grid</span>
+
+    <span class="k">def</span> <span class="nf">_invalid_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">):</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> is out of bounds.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">location</span><span class="p">)))</span>
 
 <div class="viewcode-block" id="GameMap.in_arena_bounds"><a class="viewcode-back" href="../../gamelib.html#gamelib.game_map.GameMap.in_arena_bounds">[docs]</a>    <span class="k">def</span> <span class="nf">in_arena_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Checks if the given location is inside the diamond shaped game board.</span>
@@ -195,7 +196,7 @@
 <span class="sd">        is to allow you to create arbitrary gamestates. Using this function on the GameMap inside game_state can cause your algo to crash.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_arena_bounds</span><span class="p">(</span><span class="n">location</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">InvalidCoordinate</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_invalid_coordinates</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">player_index</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">player_index</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Player index </span><span class="si">{}</span><span class="s2"> is invalid. Player index should be 0 or 1.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">player_index</span><span class="p">))</span>
 
@@ -216,7 +217,7 @@
 <span class="sd">        is to allow you to create arbitrary gamestates. Using this function on the GameMap inside game_state can cause your algo to crash.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_arena_bounds</span><span class="p">(</span><span class="n">location</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">InvalidCoordinate</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_invalid_coordinates</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
         
         <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">location</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__map</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span></div>
@@ -234,6 +235,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">radius</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">radius</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">ARENA_SIZE</span><span class="p">:</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Radius </span><span class="si">{}</span><span class="s2"> was passed to get_locations_in_range. Expected integer between 0 and </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ARENA_SIZE</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_arena_bounds</span><span class="p">(</span><span class="n">location</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_invalid_coordinates</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
 
         <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">location</span>
         <span class="n">locations</span> <span class="o">=</span> <span class="p">[]</span>
@@ -260,13 +263,6 @@
         <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">location_2</span>
 
         <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">x1</span> <span class="o">-</span> <span class="n">x2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">y1</span> <span class="o">-</span> <span class="n">y2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span></div></div>
-
-<div class="viewcode-block" id="InvalidCoordinate"><a class="viewcode-back" href="../../gamelib.html#gamelib.game_map.InvalidCoordinate">[docs]</a><span class="k">class</span> <span class="nc">InvalidCoordinate</span><span class="p">(</span><span class="ne">Warning</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Attempting to use a location that is out of bounds will raise this warning</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> is out of bounds.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">location</span><span class="p">)))</span></div>
-
 </pre></div>
 
           </div>
@@ -318,7 +314,7 @@
       &copy;2018, Correlation One.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.8</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
       
     </div>

@@ -4,8 +4,8 @@
     - cd into sphinx folder
     - move the files you want to document into sphinx/gamelib
     - Delete gamelib.rst and modules.rst
-    - run sphinx-apidoc -o . ./gamelib
     - Delete the contents of ./html
+    - run sphinx-apidoc -o . ./gamelib
     - run sphinx-build . ./html
 
 ### To create a folder like this from scratch

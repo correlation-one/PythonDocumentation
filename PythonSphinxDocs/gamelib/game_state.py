@@ -29,12 +29,14 @@ class GameState:
         * BITS (int): A constant representing the bits resource
         * CORES (int): A constant representing the cores resource
          
-        * game_map (:obj: GameMap): The current GameMap
+        * game_map (:obj: GameMap): The current GameMap. To retrieve a list of GameUnits at a location, use game_map[x, y]
         * turn_number (int): The current turn number. Starts at 0.
         * my_health (int): Your current remaining health
         * my_time (int): The time you took to submit your previous turn
         * enemy_health (int): Your opponents current remaining health
         * enemy_time (int): Your opponents current remaining time
+
+        
     """
 
     def __init__(self, config, serialized_string):
@@ -142,6 +144,12 @@ class GameState:
         held_resource = self.get_resource(resource_type, player_index)
         self._player_resources[player_index][resource_key] = held_resource + amount
 
+    def _invalid_player_index(self, index):
+        warnings.warn("Invalid player index {} passed, player index should always be 0 (yourself) or 1 (your opponent)".format(index))
+    
+    def _invalid_unit(self, unit):
+        warnings.warn("Invalid unit {}".format(unit))
+
     def submit_turn(self):
         """Submit and end your turn.
         Must be called at the end of your turn or the algo will hang.
@@ -164,7 +172,7 @@ class GameState:
 
         """
         if not player_index == 1 and not player_index == 0:
-            warnings.warn("Player index {} is invalid. Player index should always be 0 (you) or 1 (your opponent).".format(player_index))
+            self._invalid_player_index(player_index)
         if not resource_type == self.BITS and not resource_type == self.CORES:
             warnings.warn("Invalid resource_type '{}'. Please use game_state.BITS or game_state.CORES".format(resource_type))
 
@@ -186,7 +194,7 @@ class GameState:
 
         """
         if unit_type not in ALL_UNITS:
-            warnings.warn("Invalid unit '{}'.")
+            self._invalid_unit(unit_type)
             return
 
         cost = self.type_cost(unit_type)
@@ -210,7 +218,7 @@ class GameState:
         if turns_in_future < 1 or turns_in_future > 99:
             warnings.warn("Invalid turns in future used ({}). Turns in future should be between 1 and 99".format(turns_in_future))
         if not player_index == 1 and not player_index == 0:
-            warnings.warn("Player index {} is invalid. Player index should always be 0 (you) or 1 (your opponent).".format(player_index))
+            self._invalid_player_index(player_index)
         if type(current_bits) == int and current_bits < 0:
             warnings.warn("Invalid current bits ({}). Current bits cannot be negative.".format(current_bits))
 
@@ -234,7 +242,7 @@ class GameState:
 
         """
         if unit_type not in ALL_UNITS:
-            warnings.warn("Invalid unit '{}'.")
+            self._invalid_unit(unit_type)
             return
 
         unit_def = self.config["unitInformation"][UNIT_TYPE_TO_INDEX[unit_type]]
@@ -257,7 +265,7 @@ class GameState:
 
         """
         if unit_type not in ALL_UNITS:
-            warnings.warn("Invalid unit '{}'.")
+            self._invalid_unit(unit_type)
             return
         
         if not self.game_map.in_arena_bounds(location):
@@ -286,7 +294,7 @@ class GameState:
 
         """
         if unit_type not in ALL_UNITS:
-            warnings.warn("Invalid unit '{}'.")
+            self._invalid_unit(unit_type)
             return
         if num < 1:
             warnings.warn("Attempted to spawn fewer than one units! ({})".format(num))
@@ -366,3 +374,16 @@ class GameState:
             if unit.stationary:
                 return unit
         return False
+
+    def suppress_warnings(self, suppress):
+        """Suppress all warnings
+
+        Args: 
+            * suppress: If true, disable warnings. If false, enable warnings.
+        """
+
+        if suppress:
+            warnings.filterwarnings("ignore")
+        else:
+            warnings.resetwarnings()
+

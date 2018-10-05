@@ -13,6 +13,7 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
    
@@ -42,7 +43,6 @@
 <span class="sd">        * unit_type (string): This unit&#39;s type</span>
 <span class="sd">        * config (JSON): Contains information about the game</span>
 <span class="sd">        * player_index (integer): The player that controls this unit. 0 for you, 1 for your opponent.</span>
-<span class="sd">        * stability (integer): The health of the unit</span>
 <span class="sd">        * x (integer): The x coordinate of the unit</span>
 <span class="sd">        * y (integer): The y coordinate of the unit</span>
 <span class="sd">        * stationary (bool): Whether or not this unit is a firewall</span>
@@ -51,6 +51,7 @@
 <span class="sd">        * damage_f (int): The amount of damage this information unit will deal to enemy firewalls.</span>
 <span class="sd">        * damage_i (int): The amount of damage this information unit will deal to enemy information.</span>
 <span class="sd">        * range (float): The effective range of this unit</span>
+<span class="sd">        * max_stability (float): The starting stability of this unit. Note than stability can be increased beyond this value by encryptors</span>
 <span class="sd">        * stability (float): The current health of this unit</span>
 <span class="sd">        * cost (int): The resource cost of this unit</span>
 
@@ -148,7 +149,7 @@
       &copy;2018, Correlation One.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.8</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
       
     </div>

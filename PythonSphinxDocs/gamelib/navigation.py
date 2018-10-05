@@ -1,7 +1,7 @@
 import heapq
 import math
 import sys
-#import queue
+import queue
 from .util import debug_write
 
 class Node:
@@ -73,6 +73,28 @@ class ShortestPathFinder:
         Finds the most ideal tile in our 'pocket' of pathable space. 
         The edge if it is available, or the best self destruct location otherwise
         """
+        current = queue.Queue()
+        current.put(start)
+        best_idealness = self._get_idealness(start, end_points)
+        self.game_map[start[0]][start[1]].visited_idealness = True
+        most_ideal = start
+
+        while not current.empty():
+            search_location = current.get()
+            for neighbor in self._get_neighbors(search_location):
+                if not self.game_state.game_map.in_arena_bounds(neighbor) or self.game_map[neighbor[0]][neighbor[1]].blocked:
+                    continue
+
+                x, y = neighbor
+                current_idealness = self._get_idealness(neighbor, end_points)
+
+                if current_idealness > best_idealness:
+                    best_idealness = current_idealness
+                    most_ideal = neighbor
+
+                if not self.game_map[x][y].visited_idealness and not self.game_map[x][y].blocked:
+                    self.game_map[x][y].visited_idealness = True
+                    current.put(neighbor)
 
         return most_ideal
 
@@ -129,6 +151,36 @@ class ShortestPathFinder:
         """Breadth first search of the grid, setting the pathlengths of each node
 
         """
+        #VALDIATION
+        #Add our most ideal tiles to current
+        current = queue.Queue()
+        if ideal_tile in end_points:
+            for location in end_points:
+               current.put(location)
+               #Set current pathlength to 0
+               self.game_map[location[0]][location[1]].pathlength = 0
+               self.game_map[location[0]][location[1]].visited_validate = True
+        else:
+            current.put(ideal_tile)
+            self.game_map[ideal_tile[0]][ideal_tile[1]].pathlength = 0
+            self.game_map[ideal_tile[0]][ideal_tile[1]].visited_validate = True
+
+        #While current is not empty
+        while not current.empty():
+            current_location = current.get()
+            current_node = self.game_map[current_location[0]][current_location[1]]
+            for neighbor in self._get_neighbors(current_location):
+                if not self.game_state.game_map.in_arena_bounds(neighbor) or self.game_map[neighbor[0]][neighbor[1]].blocked:
+                    continue
+
+                neighbor_node = self.game_map[neighbor[0]][neighbor[1]]
+                if not neighbor_node.visited_validate and not current_node.blocked:
+                    neighbor_node.pathlength = current_node.pathlength + 1
+                    neighbor_node.visited_validate = True
+                    current.put(neighbor)
+
+        #debug_write("Print after validate")
+        #self.print_map()
         return
 
     def _get_path(self, start_point, end_points):

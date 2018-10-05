@@ -44,6 +44,14 @@ gamelib.navigation module
     :undoc-members:
     :show-inheritance:
 
+gamelib.tests module
+--------------------
+
+.. automodule:: gamelib.tests
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 gamelib.unit module
 -------------------
 

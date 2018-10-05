@@ -6,10 +6,7 @@ class GameMap:
     """Holds data about the current game map and provides functions
     useful for getting information related to the map.
 
-    Note that the game board is stored as a 2 dimensional array representing each tile on
-    the board. Each tile is yet another array containing the units located at
-    the x,y coordinates specified in the first two indices. So getting the 2nd
-    of 3 units located at (12, 13) would look like: `unit = instance_of_game_map[12,13][1]`
+    game_map[x, y] will return a list of Units located at that location, or None if there are no units
 
     Attributes:
         * config (JSON): Contains information about the game
@@ -42,13 +39,13 @@ class GameMap:
         if len(location) == 2 and self.in_arena_bounds(location):
             x,y = location
             return self.__map[x][y]
-        raise InvalidCoordinate(location)
+        self._invalid_coordinates(location)
 
     def __setitem__(self, location, val):
         if type(location) == tuple and len(location) == 2 and self.in_arena_bounds(location):
             self.__map[location[0]][location[1]] = val
             return
-        raise InvalidCoordinate(location) 
+        self._invalid_coordinates(location)
 
     def __iter__(self):
         self.__start = [13,0]
@@ -74,6 +71,9 @@ class GameMap:
             for _ in range(0, self.ARENA_SIZE):
                 grid[x].append([])
         return grid
+
+    def _invalid_coordinates(self, location):
+        warnings.warn("{} is out of bounds.".format(str(location)))
 
     def in_arena_bounds(self, location):
         """Checks if the given location is inside the diamond shaped game board.
@@ -161,7 +161,7 @@ class GameMap:
         is to allow you to create arbitrary gamestates. Using this function on the GameMap inside game_state can cause your algo to crash.
         """
         if not self.in_arena_bounds(location):
-            raise InvalidCoordinate(location)
+            self._invalid_coordinates(location)
         if player_index < 0 or player_index > 1:
             warnings.warn("Player index {} is invalid. Player index should be 0 or 1.".format(player_index))
 
@@ -182,7 +182,7 @@ class GameMap:
         is to allow you to create arbitrary gamestates. Using this function on the GameMap inside game_state can cause your algo to crash.
         """
         if not self.in_arena_bounds(location):
-            raise InvalidCoordinate(location)
+            self._invalid_coordinates(location)
         
         x, y = location
         self.__map[x][y] = []
@@ -200,6 +200,8 @@ class GameMap:
         """
         if radius < 0 or radius > self.ARENA_SIZE:
             warnings.warn("Radius {} was passed to get_locations_in_range. Expected integer between 0 and {}".format(radius, self.ARENA_SIZE))
+        if not self.in_arena_bounds(location):
+            self._invalid_coordinates(location)
 
         x, y = location
         locations = []
@@ -226,10 +228,3 @@ class GameMap:
         x2, y2 = location_2
 
         return math.sqrt((x1 - x2)**2 + (y1 - y2)**2)
-
-class InvalidCoordinate(Warning):
-    """Attempting to use a location that is out of bounds will raise this warning
-    """
-    def __init__(self, location):
-        super().__init__("{} is out of bounds.".format(str(location)))
-

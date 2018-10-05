@@ -13,6 +13,7 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
    
@@ -132,7 +133,7 @@
         <span class="kn">from</span> <span class="nn">.game_state</span> <span class="k">import</span> <span class="n">DESTRUCTOR</span><span class="p">,</span> <span class="n">UNIT_TYPE_TO_INDEX</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">player_index</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">player_index</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Passed invalid player index </span><span class="si">{}</span><span class="s2"> to get_attackers. Player index should always be 0 (you) or 1 (your opponent)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">player_index</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_invalid_player_index</span><span class="p">(</span><span class="n">player_index</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_map</span><span class="o">.</span><span class="n">in_arena_bounds</span><span class="p">(</span><span class="n">location</span><span class="p">):</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Location </span><span class="si">{}</span><span class="s2"> is not in the arena bounds.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">location</span><span class="p">))</span>
 
@@ -197,7 +198,7 @@
       &copy;2018, Correlation One.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.8</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
       
     </div>
