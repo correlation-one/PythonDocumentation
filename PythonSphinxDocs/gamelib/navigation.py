@@ -1,7 +1,6 @@
 import heapq
 import math
 import sys
-import queue
 from .util import debug_write
 
 class Node:
@@ -73,7 +72,7 @@ class ShortestPathFinder:
         Finds the most ideal tile in our 'pocket' of pathable space. 
         The edge if it is available, or the best self destruct location otherwise
         """
-        current = queue.Queue()
+        current = ''#queue.Queue()
         current.put(start)
         best_idealness = self._get_idealness(start, end_points)
         self.game_map[start[0]][start[1]].visited_idealness = True
@@ -153,7 +152,7 @@ class ShortestPathFinder:
         """
         #VALDIATION
         #Add our most ideal tiles to current
-        current = queue.Queue()
+        current = ''#queue.Queue()
         if ideal_tile in end_points:
             for location in end_points:
                current.put(location)

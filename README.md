@@ -3,6 +3,7 @@
 
     - cd into sphinx folder
     - move the files you want to document into sphinx/gamelib
+    - delete all referances to 'queue', for some reason read the docs does not like the queue library
     - Delete gamelib.rst and modules.rst
     - Delete the contents of ./html
     - run sphinx-apidoc -o . ./gamelib
